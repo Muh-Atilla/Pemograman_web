@@ -12,7 +12,7 @@ playerX = "X"
 playerO = "O"
 curr_player = playerX
 
-# Papan (Awalnya diisi nol, 02:45)
+# Papan (Awalnya diisi None)
 board = [[None, None, None],
          [None, None, None],
          [None, None, None]]
@@ -29,14 +29,14 @@ def new_game():
     turns = 0
     game_over = False
     
-    # Update Label
+    # Update Label (Diterjemahkan)
     # Pemain saat ini (curr_player) akan menjadi pemain yang memulai babak baru
-    label.config(text=curr_player + "'s turn", foreground="white") # 31:58
+    label.config(text="Giliran " + curr_player, foreground="white") 
     
     # Reset semua tombol pada papan
     for row in range(3):
         for column in range(3):
-            # 31:14 - Reset text, warna, dan status tombol
+            # Reset text, warna, dan status tombol
             board[row][column].config(text="", 
                                       foreground=color_blue, 
                                       background=color_gray,
@@ -47,10 +47,10 @@ def check_winner():
     global turns, game_over
     turns += 1
 
-    # Logika untuk menampilkan pemenang (23:31)
+    # Logika untuk menampilkan pemenang (Diterjemahkan)
     def handle_winner(winner_tile, row_indices, col_indices):
         global game_over
-        label.config(text=winner_tile + " is the winner!", foreground=color_yellow)
+        label.config(text="Pemenangnya adalah " + winner_tile + "!", foreground=color_yellow)
         
         # Mengubah warna tombol yang menang
         for r, c in zip(row_indices, col_indices):
@@ -59,6 +59,7 @@ def check_winner():
         game_over = True
         return True
     
+    # --- Cek Baris Horizontal ---
     for row in range(3):
         first_tile = board[row][0]["text"]
         if (first_tile == board[row][1]["text"] and 
@@ -67,6 +68,7 @@ def check_winner():
             
             return handle_winner(first_tile, [row, row, row], [0, 1, 2])
     
+    # --- Cek Kolom Vertikal ---
     for column in range(3):
         first_tile = board[0][column]["text"]
         if (first_tile == board[1][column]["text"] and 
@@ -76,6 +78,7 @@ def check_winner():
             return handle_winner(first_tile, [0, 1, 2], [column, column, column])
 
 
+    # --- Cek Diagonal Kiri Atas ke Kanan Bawah ---
     first_tile = board[0][0]["text"]
     if (first_tile == board[1][1]["text"] and 
         first_tile == board[2][2]["text"] and 
@@ -83,6 +86,7 @@ def check_winner():
         
         return handle_winner(first_tile, [0, 1, 2], [0, 1, 2])
 
+    # --- Cek Diagonal Kanan Atas ke Kiri Bawah ---
     first_tile = board[0][2]["text"]
     if (first_tile == board[1][1]["text"] and 
         first_tile == board[2][0]["text"] and 
@@ -90,8 +94,9 @@ def check_winner():
         
         return handle_winner(first_tile, [0, 1, 2], [2, 1, 0])
 
+    # --- Cek Seri (Tie) ---
     if turns == 9:
-        label.config(text="It's a Tie!", foreground=color_yellow)
+        label.config(text="Hasilnya Seri!", foreground=color_yellow) # Diterjemahkan
         game_over = True
         return True
 
@@ -102,42 +107,42 @@ def set_tile(row, column):
     """Menangani klik tombol dan menempatkan simbol pemain."""
     global curr_player, game_over
     
-    # 20:59 - Cek jika ubin sudah terisi atau game sudah berakhir
+    # Cek jika ubin sudah terisi atau game sudah berakhir
     if board[row][column]["text"] != "" or game_over:
         return
         
-    # 19:45 - Isi ubin dengan simbol pemain saat ini
+    # Isi ubin dengan simbol pemain saat ini
     board[row][column].config(text=curr_player) 
     
-    # 21:43 - Cek pemenang setelah giliran selesai
+    # Cek pemenang setelah giliran selesai
     check_winner()
 
-    # 19:57 - Ganti pemain (hanya jika game belum berakhir)
+    # Ganti pemain (hanya jika game belum berakhir)
     if not game_over:
         if curr_player == playerO:
             curr_player = playerX
         else:
             curr_player = playerO
         
-        # 20:17 - Update Label
-        label.config(text=curr_player + "'s turn")
+        # Update Label (Diterjemahkan)
+        label.config(text="Giliran " + curr_player)
 
 # Jendela Utama
 window = tkinter.Tk()
-window.title("Tic Tac Toe") # 04:49
-window.resizable(False, False) # 04:54
+window.title("Tic Tac Toe") # Judul jendela tetap dalam Bahasa Inggris, ini umum.
+window.resizable(False, False) 
 
 # Frame (Wadah untuk komponen)
-frame = tkinter.Frame(window) # 05:53
+frame = tkinter.Frame(window) 
 
-# Label Status (Menampilkan giliran pemain atau hasil)
+# Label Status (Menampilkan giliran pemain atau hasil) (Diterjemahkan)
 label = tkinter.Label(frame, 
-                      text=curr_player + "'s turn", 
+                      text="Giliran " + curr_player, 
                       font=("Consolas", 20), 
                       background=color_gray, 
-                      foreground="white") # 06:15 - 07:19
+                      foreground="white") 
 
-label.grid(row=0, column=0, columnspan=3, sticky="we") # 09:08, 13:32, 14:04
+label.grid(row=0, column=0, columnspan=3, sticky="we") 
 
 # Loop untuk membuat 9 tombol papan
 for row in range(3):
@@ -148,23 +153,23 @@ for row in range(3):
                              background=color_gray, 
                              foreground=color_blue, 
                              width=4, 
-                             height=1, # Perbaikan: 'heigth' menjadi 'height'
-                             command=lambda row=row, column=column: set_tile(row, column)) # 10:03 - 11:21
+                             height=1, 
+                             command=lambda row=row, column=column: set_tile(row, column)) 
         
         # Menyimpan referensi tombol ke dalam list 'board'
         board[row][column] = btn 
         
         # Menempatkan tombol di grid
         # row+1 karena row 0 sudah dipakai label
-        board[row][column].grid(row=row+1, column=column) # 12:33
+        board[row][column].grid(row=row+1, column=column) 
 
-# Tombol Restart
+# Tombol Restart (Diterjemahkan)
 button = tkinter.Button(frame, 
-                        text="restart", 
+                        text="MULAI ULANG", # Diterjemahkan
                         font=("Consolas", 20), 
                         background=color_gray, 
                         foreground="white", 
-                        command=new_game) # 14:17
+                        command=new_game) 
 
 button.grid(row=4, column=0, columnspan=3, sticky="we") 
 
@@ -174,7 +179,7 @@ window.update()
 window_width = window.winfo_width()
 window_height = window.winfo_height()
 screen_width = window.winfo_screenwidth()
-screen_height = window.winfo_screenheight() # Perbaikan: 'screenheighf' menjadi 'screenheight'
+screen_height = window.winfo_screenheight() 
 
 window_x = int(screen_width / 2 - window_width / 2)
 window_y = int(screen_height / 2 - window_height / 2)
